@@ -1,6 +1,6 @@
 {
   "name": "crossforge",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "",
   "main": "bin/main.js",
   "type": "module",
@@ -24,7 +24,7 @@
   },
   "keywords": [],
   "author": "KaninchenSpeed",
-  "license": "GLP-3.0",
+  "license": "GPL-3.0",
   "devDependencies": {
     "@types/fs-extra": "^9.0.13",
     "concurrently": "^6.4.0",

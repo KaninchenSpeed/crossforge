@@ -2,6 +2,9 @@
 
 There could be problems when using this on other operating systems other than Linux. They will get fixed soon.
 
+## Features
+
+- Installing curseforge modpacks from json and zip
 
 ## Building
 

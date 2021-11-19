@@ -212,18 +212,19 @@ switch (cmd) {
     case 'h':
     default: {
         console.log(`
-            Help:
-                This is the helppage of crossforge.
+            === CrossForge ===
+                \tThis is the helppage of crossforge.
 
-                path_to_modpack can be the path to the zip file or the manifest.json file.
-                All other files will be ignored when installing a modpack using a manifest.json file.
+                \tpath_to_modpack can be the path to the zip file or the manifest.json file.
+                \tAll other files will be ignored when installing a modpack using a manifest.json file.
 
-                help: crossforge [h/help]
-                info about a modpack: crossforge info <path_to_modpack>
-                install a modpack: crossforge [i/install] <path_to_modpack>
-                configuration help: crossforge config help
+                \thelp: crossforge [h/help]
+                \tinfo about a modpack: crossforge info <path_to_modpack>
+                \tinstall a modpack: crossforge [i/install] <path_to_modpack>
+                \tconfiguration help: crossforge config help
 
-                Github: https://github.com/KaninchenSpeed/crossforge
+                \tGithub: https://github.com/KaninchenSpeed/crossforge
+                \tNPM: https://www.npmjs.com/package/crossforge
         `.replace(/    /g, '').replace(/\t/g, '    '))
     } break
 }

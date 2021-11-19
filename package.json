@@ -24,7 +24,7 @@
   },
   "keywords": [],
   "author": "KaninchenSpeed",
-  "license": "ISC",
+  "license": "GLP-3.0",
   "devDependencies": {
     "@types/fs-extra": "^9.0.13",
     "concurrently": "^6.4.0",

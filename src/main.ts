@@ -1,6 +1,6 @@
 import fs from 'fs'
 import fse from 'fs-extra'
-import fetch from 'node-fetch'
+import fetch from 'node-fetch-commonjs'
 import os from 'os'
 import cp from 'child_process'
 import { autoLoad, decideModLoader } from './loadManifest.js'

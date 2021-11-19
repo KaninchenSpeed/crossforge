@@ -1,9 +1,8 @@
 {
   "name": "crossforge",
-  "version": "1.0.2",
+  "version": "1.0.4",
   "description": "",
   "main": "bin/main.js",
-  "type": "module",
   "bin": {
     "crossforge": "node ./bin/main.js"
   },
@@ -33,6 +32,6 @@
   },
   "dependencies": {
     "fs-extra": "^10.0.0",
-    "node-fetch": "^3.1.0"
+    "node-fetch-commonjs": "^3.0.3"
   }
 }

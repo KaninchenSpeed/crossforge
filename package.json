@@ -1,10 +1,10 @@
 {
   "name": "crossforge",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "",
   "main": "bin/main.js",
   "bin": {
-    "crossforge": "node ./bin/main.js"
+    "crossforge": "./bin/main.js"
   },
   "engines": {
     "node": ">=14.0.0"

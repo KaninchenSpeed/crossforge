@@ -2,14 +2,21 @@
   "name": "crossforge",
   "version": "1.0.0",
   "description": "",
-  "main": "dist/main.js",
+  "main": "bin/main.js",
   "type": "module",
+  "bin": {
+    "crossforge": "node ./bin/main.js"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
   "scripts": {
     "start": "node .",
     "devStart": "nodemon .",
     "build": "tsc",
     "buildWatch": "tsc --watch",
-    "dev": "concurrently \"npm run buildWatch\" \"npm run devStart\""
+    "dev": "concurrently \"npm run buildWatch\" \"npm run devStart\"",
+    "runBin": "crossforge"
   },
   "keywords": [],
   "author": "",

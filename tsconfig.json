@@ -4,6 +4,6 @@
     "module": "ESNext",
     "moduleResolution": "Node",
     "esModuleInterop": true,
-    "outDir": "dist"
+    "outDir": "bin"
   }
 }

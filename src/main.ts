@@ -224,6 +224,6 @@ switch (cmd) {
                 configuration help: crossforge config help
 
                 Github: https://github.com/KaninchenSpeed/crossforge
-        `)
+        `.replace(/    /g, '').replace(/\t/g, '    '))
     } break
 }

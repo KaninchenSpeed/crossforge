@@ -16,7 +16,7 @@
     "build": "tsc",
     "buildWatch": "tsc --watch",
     "dev": "concurrently \"npm run buildWatch\" \"npm run devStart\"",
-    "runBin": "crossforge"
+    "prepublish": "npm run build"
   },
   "keywords": [],
   "author": "",

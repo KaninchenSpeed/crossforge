@@ -23,7 +23,7 @@
     "prepublish": "npm run build"
   },
   "keywords": [],
-  "author": "",
+  "author": "KaninchenSpeed",
   "license": "ISC",
   "devDependencies": {
     "@types/fs-extra": "^9.0.13",

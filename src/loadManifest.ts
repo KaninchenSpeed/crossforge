@@ -46,14 +46,14 @@ export const loadFromZip = (path: string) => {
             return
         }
 
-        const outPath = `${path.split('/').filter((v, i, arr) => i + 1 != arr.length).join('/')}/.tmp_curseforge`
+        const outPath = `./.tmp_curseforge`
         
         if (!cp.execSync('unzip').toString().match(/unzip/i)) {
             rej('unzip not installed')
             return
         }
 
-        cp.execSync(`unzip ${path} -d ${outPath}`)
+        cp.execSync(`sudo unzip ${path} -d ${outPath}`)
         
         res({
             manifest: loadfromJSON(`${outPath}/manifest.json`),

@@ -153,14 +153,18 @@ switch (cmd) {
                         'x-api-key': config.get().api_key
                     }
                 })
-                const resTxt = await res.text()
-                const url: string = JSON.parse(resTxt).data
-                const fn = url.split('/').filter((v, i, arr) => i + 1 == arr.length)[0]
-                console.log(`downloading ${fn} ...`)
-                const fileRes = await fetch(url)
-                const fileBuffer = await fileRes.arrayBuffer()
-                fs.writeFileSync(`${path}/mods/${fn}`, Buffer.from(fileBuffer), { encoding: 'binary' })
-                console.log(`downloaded ${fn}`)
+                try {
+                    const resTxt = await res.text()
+                    const url: string = JSON.parse(resTxt).data
+                    const fn = url.split('/').filter((v, i, arr) => i + 1 == arr.length)[0]
+                    console.log(`downloading ${fn} ...`)
+                    const fileRes = await fetch(url)
+                    const fileBuffer = await fileRes.arrayBuffer()
+                    fs.writeFileSync(`${path}/mods/${fn}`, Buffer.from(fileBuffer), { encoding: 'binary' })
+                    console.log(`downloaded ${fn}`)
+                } catch (err) {
+                    console.error(err)
+                }
             }))
             console.log('mod download finished')
 

@@ -21,7 +21,10 @@
     "dev": "concurrently \"npm run buildWatch\" \"npm run devStart\"",
     "prepublish": "npm run build"
   },
-  "keywords": [],
+  "keywords": [
+    "curseforge",
+    "minecraft"
+  ],
   "author": "KaninchenSpeed",
   "license": "GPL-3.0",
   "devDependencies": {

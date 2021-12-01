@@ -2,3 +2,4 @@ node_modules
 bin
 package-lock.json
 config.json
+testpack.zip

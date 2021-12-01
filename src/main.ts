@@ -1,8 +1,8 @@
 import fs from 'fs'
 import fse from 'fs-extra'
 import fetch from 'node-fetch-commonjs'
-import os from 'os'
-import cp from 'child_process'
+import CurseForge from 'curseforge_api_bindings'
+import * as modloaders from './installModloader'
 import { autoLoad, decideModLoader } from './loadManifest.js'
 import * as config from './config.js'
 import { addProfile } from './launcher.js'
@@ -107,7 +107,7 @@ switch (cmd) {
     } break
     case 'install':
     case 'i': {
-        if (!fs.existsSync(`${os.homedir()}/.minecraft`)) {
+        if (!fs.existsSync(config.get()[config.bindings.minecraft_path])) {
             console.error('no Minecraft Java Edition install found!')
             break
         }
@@ -117,17 +117,18 @@ switch (cmd) {
 
             break
         }
-        if (!fs.existsSync(`${os.homedir()}/.minecraft/modpacks`)) {
+        if (!fs.existsSync(`${config.get()[config.bindings.minecraft_path]}/modpacks`)) {
             console.warn('no modpack folder found!')
             console.log('creating modpack folder...')
-            fs.mkdirSync(`${os.homedir()}/.minecraft/modpacks`)
+            fs.mkdirSync(`${config.get()[config.bindings.minecraft_path]}/modpacks`)
         }
 
         console.log('loading manifest...')
         autoLoad(args[0]).then(async ({ manifest, outPath }) => {
             console.log('loaded manifest')
 
-            const path = `${os.homedir()}/.minecraft/modpacks/${manifest.name.replace(/ /g, '_')}`
+            const curseforge = new CurseForge(config.get()[config.bindings.api])
+            const path = `${config.get()[config.bindings.minecraft_path]}/modpacks/${manifest.name.replace(/ /g, '_')}`
 
             console.log('checking for duplicates...')
             if (fs.existsSync(path)) {
@@ -147,24 +148,15 @@ switch (cmd) {
             await Promise.all(manifest.files.map<Promise<void>>(async file => {
                 console.log(`loading download url of project ${file.projectID}, file ${file.fileID}`)
                 
-                const res = await fetch(`https://api.curseforge.com/v1/mods/${file.projectID}/files/${file.fileID}/download-url`, {
-                    headers: {
-                        'Accept': 'application/json',
-                        'x-api-key': config.get().api_key
-                    }
-                })
-                try {
-                    const resTxt = await res.text()
-                    const url: string = JSON.parse(resTxt).data
-                    const fn = url.split('/').filter((v, i, arr) => i + 1 == arr.length)[0]
-                    console.log(`downloading ${fn} ...`)
-                    const fileRes = await fetch(url)
-                    const fileBuffer = await fileRes.arrayBuffer()
-                    fs.writeFileSync(`${path}/mods/${fn}`, Buffer.from(fileBuffer), { encoding: 'binary' })
-                    console.log(`downloaded ${fn}`)
-                } catch (err) {
-                    console.error(err)
-                }
+                const url = await curseforge.Files.getFileDownloadURL(file.projectID, file.fileID)
+
+                const fn = url.split('/').filter((v, i, arr) => i + 1 == arr.length)[0]
+                console.log(`downloading ${fn} ...`)
+                const fileRes = await fetch(url)
+                const fileBuffer = await fileRes.arrayBuffer()
+                fs.writeFileSync(`${path}/mods/${fn}`, Buffer.from(fileBuffer), { encoding: 'binary' })
+                console.log(`downloaded ${fn}`)
+                
             }))
             console.log('mod download finished')
 
@@ -180,25 +172,23 @@ switch (cmd) {
             console.log(`detected ${modloadertype} modloader`)
             switch (modloadertype) {
                 case 'forge': {
-                    console.log('downloading forge...')
-                    const id = modloader.id.split('-')[1]
-                    const url = `https://maven.minecraftforge.net/net/minecraftforge/forge/${manifest.minecraft.version}-${id}/forge-${manifest.minecraft.version}-${id}-installer.jar`
-                    const mlres = await fetch(url)
-                    const mlfile = await mlres.arrayBuffer()
-                    fs.writeFileSync('.tmp_curseforge/forge_installer.jar', Buffer.from(mlfile), { encoding: 'binary' })
-                    console.log('downloaded forge')
-                    console.warn(`
-                    ===========================================================
-                        \tPLEASE DONT CHANGE ANYTHING IN THE FORGE INSTALLER!
-                    ===========================================================
-                    `.replace(/    /g, '').replace(/\t/g, '    '))
-                    console.log('installing forge')
-                    const install_log = cp.execSync('java -jar .tmp_curseforge/forge_installer.jar').toString()
-                    console.log(install_log)
-                    if (fs.existsSync('forge_installer.jar.log')) fs.rmSync('forge_installer.jar.log')
-                    console.log('installed forge')
+                    const modloadershort = modloader.id.split('-')[modloader.id.split('-').length - 1]
+                    if (fs.existsSync(`${config.get()[config.bindings.minecraft_path]}/versions`)) {
+                        const dir = fs.readdirSync(`${config.get()[config.bindings.minecraft_path]}/versions`)
+                        if (dir.find(fname => fname.match(new RegExp(modloadershort, 'i')))) {
+                            console.log('skipping forge install')
+                        } else {
+                            await modloaders.installForge(modloader, manifest.minecraft.version)
+                        }
+                    } else {
+                        console.error('could not find minecraft versions folder!')
+                        console.warn('forge installation autodetect failed!')
+                        console.log('CHECK FOR EXISTING INSTALLATION WITH THE EXACT SAME FORGE VERSION AND CANCEL INSTALLER IF ALREADY INSTALLED!')
+                        await modloaders.installForge(modloader, manifest.minecraft.version)
+                    }
+                    
                     console.log('adding minecraft launcher profile...')
-                    addProfile(manifest.name, path, `${manifest.minecraft.version}-forge${manifest.minecraft.version}-${modloader.id}`, 'Brick', 5)
+                    addProfile(manifest.name, path, `${manifest.minecraft.version}-${modloader.id}`, 'Brick', 5)
                     console.log('added minecraft launcher profile')
                 } break
                 default: {

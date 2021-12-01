@@ -1,18 +1,22 @@
 import fs from 'fs'
+import os from 'os'
 
 export interface Config {
     api_key?: string
     ram: number
+    minecraft_path: string
 }
 
 
 export const base: Config = {
-    ram: 6
+    ram: 6,
+    minecraft_path: `${os.homedir}/.minecraft`
 }
 
 export const bindings = {
     api: 'api_key',
-    ram: 'ram'
+    ram: 'ram',
+    minecraft_path: 'minecraft_path'
 }
 
 export const exist = () => {

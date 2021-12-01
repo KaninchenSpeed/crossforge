@@ -79,7 +79,7 @@ switch (cmd) {
                     break
                 }
                 const prop = args[1]
-                const val = fs.readFileSync(args[2]).toString()
+                const val = fs.readFileSync(args[2]).toString().replace(/\n/g, '')
 
                 if (!Object.keys(config.bindings).includes(prop)) {
                     console.error(`property "${prop}" not found`)
